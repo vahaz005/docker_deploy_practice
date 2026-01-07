@@ -1,0 +1,54 @@
+name: Deploy Backend & Frontend
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USER }}
+          key: ${{ secrets.VM_SSH_KEY }}
+          script: |
+            set -e
+
+            echo "🔹 Pulling latest code"
+            cd ~/ecommerce-plt
+            git pull origin main
+
+            COMMIT_SHA=$(git rev-parse --short HEAD)
+            echo "Commit SHA: $COMMIT_SHA"
+
+            echo "🔹 Docker login"
+            echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+
+            echo "🔹 Building BACKEND image"
+            cd backend
+            docker build -t mohdvahaz/ecommerce-plt:backend-$COMMIT_SHA .
+            docker push mohdvahaz/ecommerce-plt:backend-$COMMIT_SHA
+
+            echo "🔹 Building FRONTEND image"
+            cd ../frontend
+            docker build -t mohdvahaz/ecommerce-plt:frontend-$COMMIT_SHA .
+            docker push mohdvahaz/ecommerce-plt:frontend-$COMMIT_SHA
+
+            echo "🔹 Updating docker-compose.yml"
+            cd ..
+            sed -i "s|image: mohdvahaz/ecommerce-plt:backend-.*|image: mohdvahaz/ecommerce-plt:backend-$COMMIT_SHA|g" docker-compose.yml
+            sed -i "s|image: mohdvahaz/ecommerce-plt:frontend-.*|image: mohdvahaz/ecommerce-plt:frontend-$COMMIT_SHA|g" docker-compose.yml
+
+            echo "🔹 Deploying containers"
+            docker compose pull
+            docker compose up -d
+
+            echo "✅ Deployment successful"
