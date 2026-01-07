@@ -21,6 +21,13 @@ jobs:
           key: ${{ secrets.VM_SSH_KEY }}
           script: |
             set -e
+             
+            echo "🔹 Load NVM"
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+
+            node -v
+            npm -v
 
             echo "🔹 Pulling latest code"
             cd ~/ecommerce-plt
