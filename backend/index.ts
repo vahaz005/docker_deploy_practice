@@ -5,7 +5,7 @@ app.use(express.json()
 
 app.get("/users" , (req , res)=> {
 let  user:string[] = [] ; 
-  for(let i = 0 ; i< 20 ; i++) {
+  for(let i = 0 ; i< 100 ; i++) {
     user.push(Math.random().toLocaleString());
 
 
