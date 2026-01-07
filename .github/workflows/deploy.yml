@@ -30,6 +30,7 @@ jobs:
             npm -v
 
             echo "🔹 Pulling latest code"
+            cd ~/docker_deploy_practice
             git pull origin main
 
             COMMIT_SHA=$(git rev-parse --short HEAD)
