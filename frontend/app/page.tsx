@@ -6,7 +6,7 @@ import { use } from "react";
 
 export   async function get_users():Promise<string[]> {
 
-   const response = await axios.get('http://backend:3001/users') ;
+   const response = await axios.get('http://backend-service.svc.cluster.local:3001/users') ;
    return (await response.data).user ;
    
   
