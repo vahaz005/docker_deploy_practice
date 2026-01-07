@@ -51,8 +51,8 @@ jobs:
 
             echo "🔹 Updating docker-compose.yml"
             cd ..
-            sed -i "s|image: mohdvahaz/ecommerce-plt:backend-.*|image: mohdvahaz/ecommerce-plt:backend-$COMMIT_SHA|g" docker-compose.yml
-            sed -i "s|image: mohdvahaz/ecommerce-plt:frontend-.*|image: mohdvahaz/ecommerce-plt:frontend-$COMMIT_SHA|g" docker-compose.yml
+            sed -i "s|image: mohdvahaz/ecommerce-plt:backend.*|image: mohdvahaz/ecommerce-plt:backend-$COMMIT_SHA|g" docker-compose.yml
+            sed -i "s|image: mohdvahaz/ecommerce-plt:frontend.*|image: mohdvahaz/ecommerce-plt:frontend-$COMMIT_SHA|g" docker-compose.yml
 
             echo "🔹 Deploying containers"
             docker compose pull
