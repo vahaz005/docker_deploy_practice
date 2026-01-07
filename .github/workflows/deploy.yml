@@ -30,7 +30,6 @@ jobs:
             npm -v
 
             echo "🔹 Pulling latest code"
-            cd ~/ecommerce-plt
             git pull origin main
 
             COMMIT_SHA=$(git rev-parse --short HEAD)
